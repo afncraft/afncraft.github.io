@@ -3,11 +3,11 @@ import { useMemo, useState } from 'react';
 import { Menu, X, ShoppingBag, ArrowRight, MessageCircle, MapPin, Phone, Plus, Minus, Trash2, Check, ShoppingCart } from 'lucide-react';
 
 type Product = {
-  id:number; name:string; category:string; price:number; material:string; description:string;
+  id:number; name:string; category:string; price:number; material:string; description:string; images?:string[];
 };
 
 const products:Product[] = [
-  {id:1,name:'Handmade Marble Jewellery Box',category:'Jewellery Box',price:4999,material:'Marble • Handmade',description:'Premium handcrafted marble jewellery box featuring intricate floral inlay work in blue, green, red and gold tones. Designed as an elegant keepsake and jewellery storage piece, with detailed artisan finishing on the top and sides.'},
+  {id:1,name:'Handmade Marble Jewellery Box',category:'Jewellery Box',price:4999,material:'Marble • Handmade',description:'Premium handcrafted marble jewellery box featuring intricate floral inlay work in blue, green, red and gold tones. Designed as an elegant keepsake and jewellery storage piece, with detailed artisan finishing on the top and sides.',images:['box_view_1.jpg','box_view_2.jpg','box_view_3.jpg','box_view_4.jpg','box_view_5.jpg','box_view_6.jpg','box_view_7.jpg','box_view_8.jpg','box_view_9.jpg']},
   {id:2,name:'Marble Elephant',category:'Marble Handicrafts',price:2999,material:'Marble • Handmade',description:'Elegant handcrafted marble elephant, made as a timeless décor piece.'},
   {id:3,name:'Marble & Wood Chess Box',category:'Chess Box',price:2499,material:'Marble & Wood • Handmade',description:'Handcrafted marble and wood chess box designed for display and play.'},
   {id:4,name:'Handmade Marble Plate',category:'Marble Décor',price:1999,material:'Marble • Handmade',description:'Decorative handmade marble plate with a refined artisan finish.'},
@@ -30,6 +30,8 @@ export default function App(){
   const [checkout,setCheckout]=useState(false);
   const [placed,setPlaced]=useState(false);
   const [customer,setCustomer]=useState({name:'',phone:'',address:''});
+  const [viewProduct,setViewProduct]=useState<Product|null>(null);
+  const [viewIndex,setViewIndex]=useState(0);
 
   const categories=['All',...Array.from(new Set(products.map(p=>p.category)))];
   const shown=useMemo(()=>category==='All'?products:products.filter(p=>p.category===category),[category]);
@@ -80,7 +82,7 @@ export default function App(){
         <div className="section-head"><div><p className="eyebrow">Shop AfnCraft</p><h2>Our Collection</h2></div><button className="cart-shop-btn" onClick={()=>setCartOpen(true)}><ShoppingCart size={18}/> Cart {count>0&&`(${count})`}</button></div>
         <div className="filters">{categories.map(c=><button key={c} className={category===c?'active':''} onClick={()=>setCategory(c)}>{c}</button>)}</div>
         <div className="grid">{shown.map(p=><article className="product" key={p.id}>
-          <div className="product-img"><img src={logo()} alt={p.name}/><span>AFNCRAFT</span></div>
+          <button className="product-img product-image-btn" onClick={()=>{setViewProduct(p);setViewIndex(0)}} aria-label={`View ${p.name}`}><img src={p.images?.[0] ? `${import.meta.env.BASE_URL}products/${p.images[0]}` : logo()} alt={p.name}/><span>VIEW PRODUCT</span></button>
           <div className="product-info"><p>{p.category}</p><h3>{p.name}</h3><small>{p.material}</small><strong>{money(p.price)}</strong><button className="add-btn" onClick={()=>{add(p.id);setCartOpen(true)}}>Add to Cart <ShoppingBag size={16}/></button></div>
         </article>)}</div>
       </section>
@@ -90,6 +92,8 @@ export default function App(){
     </main>
 
     <footer><div className="brand brand-logo"><img src={logo()} alt="AfnCraft"/></div><p>© 2026 AfnCraft • Handmade with care • Agra, Uttar Pradesh</p></footer>
+
+    {viewProduct&&<div className="product-modal" onClick={()=>setViewProduct(null)}><div className="product-viewer" onClick={e=>e.stopPropagation()}><button className="viewer-close" onClick={()=>setViewProduct(null)}><X/></button><div className="viewer-main"><img src={viewProduct.images?.[viewIndex] ? `${import.meta.env.BASE_URL}products/${viewProduct.images[viewIndex]}` : logo()} alt={`${viewProduct.name} view ${viewIndex+1}`}/><button className="viewer-prev" onClick={()=>setViewIndex(i=>Math.max(0,i-1))}>‹</button><button className="viewer-next" onClick={()=>setViewIndex(i=>Math.min((viewProduct.images?.length||1)-1,i+1))}>›</button></div><div className="viewer-info"><h2>{viewProduct.name}</h2><strong>{money(viewProduct.price)}</strong><p>{viewProduct.description}</p><div className="viewer-thumbs">{(viewProduct.images||[]).map((img,i)=><button key={img} className={i===viewIndex?'selected':''} onClick={()=>setViewIndex(i)}><img src={`${import.meta.env.BASE_URL}products/${img}`} alt={`View ${i+1}`}/></button>)}</div><button className="button viewer-cart" onClick={()=>{add(viewProduct.id);setViewProduct(null);setCartOpen(true)}}>Add to Cart <ShoppingBag size={17}/></button></div></div></div>}
 
     {cartOpen&&<div className="overlay" onClick={()=>setCartOpen(false)}><aside className="cart-drawer" onClick={e=>e.stopPropagation()}>
       <div className="drawer-head"><div><p className="eyebrow">AfnCraft</p><h2>Your Cart</h2></div><button onClick={()=>setCartOpen(false)}><X/></button></div>
