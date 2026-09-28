@@ -1,3 +1,4 @@
+// AfnCraft refreshed storefront
 import { useMemo, useState } from 'react';
 import { Menu, X, ShoppingBag, ArrowRight, MessageCircle, MapPin, Phone } from 'lucide-react';
 
