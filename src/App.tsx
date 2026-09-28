@@ -36,7 +36,6 @@ const productExtras:Record<number,{story:string;details:string[];care:string}> =
   }
 };
 
-const money=
 const money=(n:number)=>'₹'+n.toLocaleString('en-IN');
 const phone='+918279921238';
 const displayPhone='+91 8279921238';
