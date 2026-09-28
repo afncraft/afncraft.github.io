@@ -7,14 +7,10 @@ type Product = {
 };
 
 const products:Product[] = [
-  {id:1,name:'Handmade Marble Jewellery Box',category:'Jewellery Box',price:4999,material:'Marble • Handmade',description:'Premium handcrafted marble jewellery box featuring intricate floral inlay work in blue, green, red and gold tones. Designed as an elegant keepsake and jewellery storage piece, with detailed artisan finishing on the top and sides.',images:['box_view_1.jpg','box_view_2.jpg','box_view_3.jpg','box_view_4.jpg','box_view_5.jpg','box_view_6.jpg','box_view_7.jpg','box_view_8.jpg','box_view_9.jpg']},
-  {id:2,name:'Marble Elephant',category:'Marble Handicrafts',price:2999,material:'Marble • Handmade',description:'Elegant handcrafted marble elephant, made as a timeless décor piece.'},
-  {id:3,name:'Marble & Wood Chess Box',category:'Chess Box',price:2499,material:'Marble & Wood • Handmade',description:'Handcrafted marble and wood chess box designed for display and play.'},
-  {id:4,name:'Handmade Marble Plate',category:'Marble Décor',price:1999,material:'Marble • Handmade',description:'Decorative handmade marble plate with a refined artisan finish.'},
-  {id:5,name:'Handmade Marble Cup Cover',category:'Marble Décor',price:1499,material:'Marble • Handmade',description:'Compact handcrafted marble cup cover made for elegant everyday décor.'},
-  {id:6,name:'Handmade Marble Jewellery Box',category:'Jewellery Box',price:2999,material:'Marble • Handmade',description:'Beautiful handmade marble jewellery box with a classic handcrafted look.'},
-  {id:7,name:'Handmade Marble Jewellery Box',category:'Jewellery Box',price:1999,material:'Marble • Handmade',description:'A smaller handmade marble jewellery box, ideal for gifting and personal use.'},
-  {id:8,name:'Custom Marble Name Plaque',category:'Customized Décor',price:2599,material:'Premium Marble • Handmade',description:'Customizable marble plaque with your name or logo and blue, green and gold stone detailing.'},
+  {id:1,name:'Handmade Marble Jewellery Box',category:'Jewellery Box',price:4999,material:'Marble • Handmade',description:'Premium handcrafted white marble jewellery box with intricate floral inlay work in blue, green, red and gold. Detailed top, front and side decoration with a soft fabric-lined interior makes it ideal for jewellery, keepsakes and gifting.',images:['box_view_1.jpg','box_view_2.jpg','box_view_3.jpg','box_view_4.jpg','box_view_5.jpg','box_view_6.jpg','box_view_7.jpg','box_view_8.jpg','box_view_9.jpg']},
+  {id:2,name:'Parrot Floral Inlay Jewellery Box',category:'Jewellery Box',price:4499,material:'Marble • Handmade Inlay',description:'Statement handcrafted inlay box featuring a colourful parrot surrounded by flowers and foliage. Rich blue, green, red, white and gold detailing gives this piece a vibrant artisan character.',images:['parrot-box-1.webp','parrot-box-2.webp']},
+  {id:3,name:'Blue Floral Marble Serving Tray',category:'Marble Décor',price:2999,material:'Marble • Handmade Inlay',description:'Elegant rectangular marble tray decorated with a delicate blue floral inlay pattern. A refined accent for serving, styling a console or coffee table, and gifting.',images:['blue-tray-1.webp','blue-tray-2.webp','blue-tray-3.webp']},
+  {id:4,name:'Handcrafted Marble Chess Board',category:'Chess & Games',price:3999,material:'Marble & Wood • Handmade',description:'Classic handcrafted chess board with contrasting natural stone squares set into a wooden presentation box. Designed for both play and display.',images:['chess-1.webp','chess-2.webp','chess-3.webp','chess-4.webp']},
 ];
 
 const money=(n:number)=>'₹'+n.toLocaleString('en-IN');
