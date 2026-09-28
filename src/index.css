@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ivory-50 text-charcoal-800 font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-forest-700 text-ivory-50 font-sans font-medium tracking-wide text-sm uppercase transition-all duration-300 hover:bg-forest-800 hover:shadow-lg active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-transparent text-forest-700 border border-forest-700 font-sans font-medium tracking-wide text-sm uppercase transition-all duration-300 hover:bg-forest-700 hover:text-ivory-50 active:scale-[0.98];
+  }
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gold-400 text-charcoal-900 font-sans font-medium tracking-wide text-sm uppercase transition-all duration-300 hover:bg-gold-500 hover:shadow-lg active:scale-[0.98];
+  }
+  .input-field {
+    @apply w-full px-4 py-3 bg-ivory-100 border border-ivory-400 text-charcoal-800 placeholder-charcoal-400 font-sans text-sm transition-colors duration-200 focus:outline-none focus:border-forest-600 focus:bg-ivory-50;
+  }
+  .section-padding {
+    @apply px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16;
+  }
+  .container-luxe {
+    @apply max-w-7xl mx-auto;
+  }
+  .text-gold-line {
+    @apply after:content-[''] after:block after:w-12 after:h-px after:bg-gold-400 after:mt-4;
+  }
+  .nav-link {
+    @apply relative text-sm font-sans tracking-wide text-charcoal-600 hover:text-forest-700 transition-colors duration-200 after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-forest-600 after:transition-all after:duration-300 hover:after:w-full;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #faf8f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4c7a8;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c6903a;
+}
+
+/* Image zoom on hover */
+.img-zoom {
+  overflow: hidden;
+}
+.img-zoom img {
+  transition: transform 0.6s ease;
+}
+.img-zoom:hover img {
+  transform: scale(1.05);
+}
