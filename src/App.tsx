@@ -9,7 +9,7 @@ const products = [
   { id: 3, name: 'Traditional Art Panel', category: 'Wall Art', price: '₹3,299', image: 'https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=900&q=80' },
 ];
 
-const logo = `${import.meta.env.BASE_URL}logo.png`;
+const Logo = ({small=false}:{small?:boolean}) => <div className={small ? "logo-lockup small" : "logo-lockup"}><span className="logo-mark">AF</span><span className="logo-name">AFNCRAFT</span><span className="logo-tag">CRAFTING TIMELESS ART</span></div>;
 const phone = '+918279921238';
 const displayPhone = '+91 8279921238';
 
@@ -25,7 +25,7 @@ export default function App() {
 
       <header className="header">
         <a className="brand brand-logo" href="#home" aria-label="AfnCraft Home">
-          <img src={logo} alt="AfnCraft logo" />
+          <Logo />
         </a>
         <button className="menu-btn" onClick={() => setMenu(!menu)} aria-label="Menu">
           {menu ? <X/> : <Menu/>}
@@ -52,7 +52,7 @@ export default function App() {
           </div>
           <div className="hero-art">
             <div className="hero-logo-card">
-              <img src={logo} alt="AfnCraft" />
+              <Logo />
               <p>CRAFTING TIMELESS ART</p>
               <span>Handcrafted artisan products</span>
             </div>
@@ -74,7 +74,7 @@ export default function App() {
             {shown.map(p =>
               <article className="product" key={p.id}>
                 <div className="product-img">
-                  <img src={p.image} alt={p.name} onError={(e) => { e.currentTarget.src = logo; }} />
+                  <img src={p.image} alt={p.name}  />
                 </div>
                 <div className="product-info"><p>{p.category}</p><h3>{p.name}</h3><strong>{p.price}</strong></div>
               </article>
@@ -100,7 +100,7 @@ export default function App() {
       </main>
 
       <footer>
-        <div className="brand brand-logo"><img src={logo} alt="AfnCraft logo" /></div>
+        <div className="brand brand-logo"><Logo small /></div>
         <p>© 2026 AfnCraft • Handmade with care • Agra, Uttar Pradesh</p>
       </footer>
     </div>
