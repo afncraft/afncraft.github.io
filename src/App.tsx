@@ -48,7 +48,10 @@ export default function App(){
   const [cartOpen,setCartOpen]=useState(false);
   const [checkout,setCheckout]=useState(false);
   const [placed,setPlaced]=useState(false);
+  const [orderId,setOrderId]=useState('');
   const [customer,setCustomer]=useState({name:'',phone:'',address:''});
+  const [trackingId,setTrackingId]=useState('');
+  const [trackedOrder,setTrackedOrder]=useState<any|null>(null);
   const [viewProduct,setViewProduct]=useState<Product|null>(null);
   const [viewIndex,setViewIndex]=useState(0);
 
@@ -70,10 +73,44 @@ export default function App(){
     `Address: ${customer.address}`
   ].join('\\n');
 
+  const createOrderId=()=>`AFN-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${Math.floor(1000+Math.random()*9000)}`;
+
   const placeOrder=()=>{
     if(!customer.name.trim()||!customer.phone.trim()||!customer.address.trim()||!cartItems.length)return;
+    const id=createOrderId();
+    const order={
+      orderId:id,
+      createdAt:new Date().toISOString(),
+      status:'Order Placed',
+      customer,
+      items:cartItems.map(p=>({id:p.id,name:p.name,qty:p.qty,price:p.price})),
+      total
+    };
+    localStorage.setItem(`afncraft-order-${id}`,JSON.stringify(order));
+    localStorage.setItem('afncraft-last-order',id);
+    setOrderId(id);
     setPlaced(true);
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(orderText())}`,'_blank');
+    const message=[
+      '🎉 AfnCraft Order Confirmed',
+      `Order ID: ${id}`,
+      '',
+      ...cartItems.map(p=>`• ${p.name} x ${p.qty} = ${money(p.price*p.qty)}`),
+      '',
+      `Total: ${money(total)}`,
+      `Name: ${customer.name}`,
+      `Phone: ${customer.phone}`,
+      `Address: ${customer.address}`,
+      '',
+      `Track Order: https://afncraft.github.io/#track?order=${id}`
+    ].join('\\n');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`,'_blank');
+  };
+
+  const trackOrder=()=>{
+    const id=trackingId.trim().toUpperCase();
+    if(!id){setTrackedOrder(null);return;}
+    const raw=localStorage.getItem(`afncraft-order-${id}`);
+    setTrackedOrder(raw?JSON.parse(raw):null);
   };
 
   return <div className="site">
@@ -82,7 +119,7 @@ export default function App(){
       <a className="brand brand-logo" href="#home"><img src={logo()} alt="AfnCraft"/></a>
       <button className="menu-btn" onClick={()=>setMenu(!menu)} aria-label="Menu">{menu?<X/>:<Menu/>}</button>
       <nav className={menu?'nav open':'nav'}>
-        <a href="#home" onClick={()=>setMenu(false)}>Home</a><a href="#shop" onClick={()=>setMenu(false)}>Shop</a><a href="#about" onClick={()=>setMenu(false)}>About</a><a href="#contact" onClick={()=>setMenu(false)}>Contact</a>
+        <a href="#home" onClick={()=>setMenu(false)}>Home</a><a href="#shop" onClick={()=>setMenu(false)}>Shop</a><a href="#track" onClick={()=>setMenu(false)}>Track Order</a><a href="#about" onClick={()=>setMenu(false)}>About</a><a href="#contact" onClick={()=>setMenu(false)}>Contact</a>
       </nav>
       <button className="bag" onClick={()=>setCartOpen(true)}><ShoppingBag size={21}/><span>Cart</span>{count>0&&<b>{count}</b>}</button>
     </header>
@@ -104,6 +141,27 @@ export default function App(){
           <button className="product-img product-image-btn" onClick={()=>{setViewProduct(p);setViewIndex(0)}} aria-label={`View ${p.name}`}><img src={p.images?.[0] ? `${import.meta.env.BASE_URL}products/${p.images[0]}` : logo()} alt={p.name}/><span>VIEW PRODUCT</span></button>
           <div className="product-info"><p>{p.category}</p><h3>{p.name}</h3><small>{p.material}</small><strong>{money(p.price)}</strong><button className="add-btn" onClick={()=>{add(p.id);setCartOpen(true)}}>Add to Cart <ShoppingBag size={16}/></button></div>
         </article>)}</div>
+      </section>
+
+      <section className="tracking" id="track">
+        <p className="eyebrow">Order Tracking</p>
+        <h2>Track your AfnCraft order</h2>
+        <p>Apna Order ID enter karke order status dekhein.</p>
+        <div className="tracking-form">
+          <input placeholder="Example: AFN-20260929-4821" value={trackingId} onChange={e=>setTrackingId(e.target.value)} onKeyDown={e=>e.key==='Enter'&&trackOrder()}/>
+          <button className="button" onClick={trackOrder}>Track Order</button>
+        </div>
+        {trackedOrder&&<div className="tracking-card">
+          <div><span>Order ID</span><strong>{trackedOrder.orderId}</strong></div>
+          <div><span>Status</span><strong>{trackedOrder.status}</strong></div>
+          <div><span>Order Total</span><strong>{money(trackedOrder.total)}</strong></div>
+          <div className="tracking-line"><b>✓</b><span>Order Placed</span></div>
+          <div className="tracking-line muted"><b>2</b><span>Confirmed</span></div>
+          <div className="tracking-line muted"><b>3</b><span>Processing</span></div>
+          <div className="tracking-line muted"><b>4</b><span>Shipped</span></div>
+          <div className="tracking-line muted"><b>5</b><span>Delivered</span></div>
+        </div>}
+        {trackingId&&trackedOrder===null&&<p className="tracking-error">Order ID nahi mila. Please exact Order ID check karein.</p>}
       </section>
 
       <section className="about" id="about"><div><p className="eyebrow">Why AfnCraft</p><h2>Crafted with detail.<br/>Made with care.</h2></div><p>Every AfnCraft piece is made to bring handcrafted character into your home. For customized requirements, contact us directly.</p></section>
@@ -156,7 +214,7 @@ export default function App(){
       {!cartItems.length?<div className="empty"><ShoppingBag size={42}/><p>Your cart is empty.</p><button className="button" onClick={()=>{setCartOpen(false);document.getElementById('shop')?.scrollIntoView()}}>Browse Products</button></div>:
       <><div className="cart-items">{cartItems.map(p=><div className="cart-item" key={p.id}><img src={`${import.meta.env.BASE_URL}products/${p.images?.[0]||""}`} alt={p.name}/><div className="cart-item-info"><h3>{p.name}</h3><strong>{money(p.price)}</strong><div className="qty"><button onClick={()=>remove(p.id)}><Minus size={14}/></button><span>{p.qty}</span><button onClick={()=>add(p.id)}><Plus size={14}/></button><button className="trash" onClick={()=>setCart(c=>{const n={...c};delete n[p.id];return n})}><Trash2 size={15}/></button></div></div></div>)}</div>
       <div className="cart-total"><span>Total</span><strong>{money(total)}</strong></div><div className="drawer-actions"><button className="clear" onClick={clearCart}>Clear Cart</button><button className="button" onClick={()=>setCheckout(true)}>Place Order <ArrowRight size={16}/></button></div></>}
-      {checkout&&<div className="checkout"><div className="checkout-head"><h2>Place Order</h2><button onClick={()=>setCheckout(false)}><X/></button></div>{placed?<div className="success"><Check size={40}/><h3>Order details opened in WhatsApp</h3><p>WhatsApp me aapka order message open ho gaya hai. Send karke order confirm karein.</p><button className="button" onClick={()=>{setCheckout(false);setCartOpen(false)}}>Done</button></div>:<><p className="checkout-note">Apni details fill karein. Order WhatsApp par confirmation ke liye open hoga.</p><input placeholder="Full Name" value={customer.name} onChange={e=>setCustomer({...customer,name:e.target.value})}/><input placeholder="Phone Number" value={customer.phone} onChange={e=>setCustomer({...customer,phone:e.target.value})}/><textarea placeholder="Delivery Address" rows={4} value={customer.address} onChange={e=>setCustomer({...customer,address:e.target.value})}/><div className="checkout-total">Order Total <strong>{money(total)}</strong></div><button className="button place-full" onClick={placeOrder}>Place Order on WhatsApp <MessageCircle size={17}/></button></>}</div>}
+      {checkout&&<div className="checkout"><div className="checkout-head"><h2>Place Order</h2><button onClick={()=>setCheckout(false)}><X/></button></div>{placed?<div className="success"><Check size={40}/><h3>Order Placed Successfully 🎉</h3><p>Aapka Order ID <strong>{orderId}</strong> hai.</p><p>WhatsApp order message open ho gaya hai. Send karke order confirmation bhej dein.</p><a className="button" href={`#track`} onClick={()=>{setCheckout(false);setCartOpen(false);setTrackingId(orderId)}}>Track Order</a></div>:<><p className="checkout-note">Apni details fill karein. Order WhatsApp par confirmation ke liye open hoga.</p><input placeholder="Full Name" value={customer.name} onChange={e=>setCustomer({...customer,name:e.target.value})}/><input placeholder="Phone Number" value={customer.phone} onChange={e=>setCustomer({...customer,phone:e.target.value})}/><textarea placeholder="Delivery Address" rows={4} value={customer.address} onChange={e=>setCustomer({...customer,address:e.target.value})}/><div className="checkout-total">Order Total <strong>{money(total)}</strong></div><button className="button place-full" onClick={placeOrder}>Place Order on WhatsApp <MessageCircle size={17}/></button></>}</div>}
     </aside></div>}
   </div>
 }
