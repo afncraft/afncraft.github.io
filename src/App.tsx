@@ -51,10 +51,8 @@ export default function App() {
             </div>
           </div>
           <div className="hero-art">
-            <div className="hero-logo-card">
-              <Logo />
-              <p>CRAFTING TIMELESS ART</p>
-              <span>Handcrafted artisan products</span>
+            <div className="hero-logo-card actual-logo-card">
+              <img src={`${import.meta.env.BASE_URL}afncraft-logo.jpg`} alt="AfnCraft - Crafting Timeless Art" />
             </div>
           </div>
         </section>
