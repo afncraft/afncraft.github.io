@@ -13,6 +13,30 @@ const products:Product[] = [
   {id:4,name:'Handcrafted Marble Chess Board',category:'Chess & Games',price:3999,material:'Marble & Wood • Handmade',description:'Classic handcrafted chess board with contrasting natural stone squares set into a wooden presentation box. Designed for both play and display.',images:['chess-board-1.jpg','chess-board-2.jpg','chess-board-3.jpg','chess-board-4.jpg']},
 ];
 
+const productExtras:Record<number,{story:string;details:string[];care:string}> = {
+  1:{
+    story:'Inspired by traditional Indian marble inlay craftsmanship, this jewellery box is designed as a small work of art as well as a useful keepsake box. Every floral detail is arranged with patience to give the piece a rich, handcrafted character.',
+    details:['Handcrafted white marble body','Detailed floral inlay artwork in multiple colours','Soft-lined interior for jewellery and keepsakes','Elegant piece for dressing tables, shelves and gifting','Natural handmade variations make every piece unique'],
+    care:'Wipe gently with a soft, dry cloth. Avoid harsh cleaners, soaking and rough surfaces to preserve the natural marble and inlay finish.'
+  },
+  2:{
+    story:'The colourful parrot motif gives traditional floral inlay a lively character. Carefully arranged stone details create an artistic composition that looks beautiful from different angles and makes the box a memorable gift.',
+    details:['Handcrafted marble construction','Parrot and floral inlay artwork','Blue, green, red, white and gold detailing','Useful for jewellery and small keepsakes','Designed for décor, collecting and gifting'],
+    care:'Clean with a soft dry or slightly damp cloth. Do not use abrasive products or leave water standing on the marble surface.'
+  },
+  3:{
+    story:'The calm character of white marble is paired with a graceful blue floral composition. This tray is made to work as both a useful serving piece and a decorative accent for a thoughtfully styled home.',
+    details:['Natural marble base','Hand-finished blue floral inlay','Rectangular presentation design','Suitable for serving or décor styling','Gift-friendly artisan piece'],
+    care:'Handle with both hands when carrying. Wipe spills promptly and use a soft cloth for regular cleaning.'
+  },
+  4:{
+    story:'This chess board brings together the timeless strategy of chess and the visual appeal of handcrafted materials. The contrasting pattern creates a strong centrepiece for a study, living room or games table.',
+    details:['Marble and wood construction','Contrasting handcrafted chess pattern','Presentation-style design','Made for play and display','Distinctive gift for chess lovers'],
+    care:'Keep dry and wipe with a soft cloth. Avoid direct impact on stone edges and prolonged exposure to moisture.'
+  }
+};
+
+const money=
 const money=(n:number)=>'₹'+n.toLocaleString('en-IN');
 const phone='+918279921238';
 const displayPhone='+91 8279921238';
@@ -89,7 +113,44 @@ export default function App(){
 
     <footer><div className="brand brand-logo"><img src={logo()} alt="AfnCraft"/></div><p>© 2026 AfnCraft • Handmade with care • Agra, Uttar Pradesh</p></footer>
 
-    {viewProduct&&<div className="product-modal" onClick={()=>setViewProduct(null)}><div className="product-viewer" onClick={e=>e.stopPropagation()}><button className="viewer-close" onClick={()=>setViewProduct(null)}><X/></button><div className="viewer-main"><img src={viewProduct.images?.[viewIndex] ? `${import.meta.env.BASE_URL}products/${viewProduct.images[viewIndex]}` : logo()} alt={`${viewProduct.name} view ${viewIndex+1}`}/><button className="viewer-prev" onClick={()=>setViewIndex(i=>Math.max(0,i-1))}>‹</button><button className="viewer-next" onClick={()=>setViewIndex(i=>Math.min((viewProduct.images?.length||1)-1,i+1))}>›</button></div><div className="viewer-info"><h2>{viewProduct.name}</h2><strong>{money(viewProduct.price)}</strong><p>{viewProduct.description}</p><div className="viewer-thumbs">{(viewProduct.images||[]).map((img,i)=><button key={img} className={i===viewIndex?'selected':''} onClick={()=>setViewIndex(i)}><img src={`${import.meta.env.BASE_URL}products/${img}`} alt={`View ${i+1}`}/></button>)}</div><button className="button viewer-cart" onClick={()=>{add(viewProduct.id);setViewProduct(null);setCartOpen(true)}}>Add to Cart <ShoppingBag size={17}/></button></div></div></div>}
+    {viewProduct&&<div className="product-modal product-fullscreen" onClick={()=>setViewProduct(null)}>
+      <div className="product-viewer product-full-view" onClick={e=>e.stopPropagation()}>
+        <div className="full-view-top">
+          <button className="viewer-close" onClick={()=>setViewProduct(null)}><X/><span>Close</span></button>
+          <div className="full-view-brand"><img src={logo()} alt="AfnCraft"/></div>
+          <button className="page-cart" onClick={()=>{setViewProduct(null);setCartOpen(true)}}><ShoppingBag size={19}/><span>Cart</span>{count>0&&<b>{count}</b>}</button>
+        </div>
+        <div className="full-view-body">
+          <section className="viewer-gallery">
+            <div className="viewer-main">
+              <img src={viewProduct.images?.[viewIndex] ? `${import.meta.env.BASE_URL}products/${viewProduct.images[viewIndex]}` : logo()} alt={viewProduct.name}/>
+              <button className="viewer-prev" onClick={()=>setViewIndex(i=>i<=0?(viewProduct.images?.length||1)-1:i-1)}>‹</button>
+              <button className="viewer-next" onClick={()=>setViewIndex(i=>i>=(viewProduct.images?.length||1)-1?0:i+1)}>›</button>
+              <span className="image-count">{viewIndex+1} / {viewProduct.images?.length||1}</span>
+            </div>
+            <div className="viewer-thumbs">{(viewProduct.images||[]).map((img,i)=><button key={img} className={i===viewIndex?'selected':''} onClick={()=>setViewIndex(i)}><img src={`${import.meta.env.BASE_URL}products/${img}`} alt={`View ${i+1}`}/></button>)}</div>
+          </section>
+          <section className="viewer-info rich-product-info">
+            <p className="eyebrow">{viewProduct.category}</p>
+            <h1>{viewProduct.name}</h1>
+            <div className="detail-price">{money(viewProduct.price)}</div>
+            <div className="detail-material">{viewProduct.material}</div>
+            <p className="detail-description">{viewProduct.description}</p>
+            <div className="viewer-actions">
+              <button className="button" onClick={()=>{add(viewProduct.id);setViewProduct(null);setCartOpen(true)}}><ShoppingBag size={17}/> Add to Cart</button>
+              <a className="whatsapp-button" href={`https://wa.me/${phone}?text=${encodeURIComponent('Hello AfnCraft, I am interested in: '+viewProduct.name+' — '+money(viewProduct.price))}`} target="_blank" rel="noreferrer"><MessageCircle size={17}/> WhatsApp Enquiry</a>
+            </div>
+            <div className="detail-sections">
+              <div><h3>Product Story</h3><p>{productExtras[viewProduct.id].story}</p></div>
+              <div><h3>Product Details</h3><ul>{productExtras[viewProduct.id].details.map(item=><li key={item}>{item}</li>)}</ul></div>
+              <div><h3>Care & Maintenance</h3><p>{productExtras[viewProduct.id].care}</p></div>
+              <div><h3>Handmade Note</h3><p>Each piece is handcrafted. Small variations in colour, stone pattern and finish can occur naturally. These differences are part of the character and individuality of handmade marble work.</p></div>
+            </div>
+          </section>
+        </div>
+        <section className="detail-bottom"><p className="eyebrow">AfnCraft • Handmade Collection</p><h2>Made slowly. Meant to be treasured.</h2><p>For custom requirements, bulk enquiries or product questions, contact AfnCraft directly.</p></section>
+      </div>
+    </div>}
 
     {cartOpen&&<div className="overlay" onClick={()=>setCartOpen(false)}><aside className="cart-drawer" onClick={e=>e.stopPropagation()}>
       <div className="drawer-head"><div><p className="eyebrow">AfnCraft</p><h2>Your Cart</h2></div><button onClick={()=>setCartOpen(false)}><X/></button></div>
