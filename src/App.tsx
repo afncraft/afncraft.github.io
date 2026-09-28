@@ -7,7 +7,7 @@ type Product = {
 };
 
 const products:Product[] = [
-  {id:1,name:'Handmade Marble Jewellery Box',category:'Jewellery Box',price:3999,material:'Marble • Handmade',description:'Premium handmade marble jewellery box with detailed artisan finishing.'},
+  {id:1,name:'Handmade Marble Jewellery Box',category:'Jewellery Box',price:4999,material:'Marble • Handmade',description:'Premium handcrafted marble jewellery box featuring intricate floral inlay work in blue, green, red and gold tones. Designed as an elegant keepsake and jewellery storage piece, with detailed artisan finishing on the top and sides.'},
   {id:2,name:'Marble Elephant',category:'Marble Handicrafts',price:2999,material:'Marble • Handmade',description:'Elegant handcrafted marble elephant, made as a timeless décor piece.'},
   {id:3,name:'Marble & Wood Chess Box',category:'Chess Box',price:2499,material:'Marble & Wood • Handmade',description:'Handcrafted marble and wood chess box designed for display and play.'},
   {id:4,name:'Handmade Marble Plate',category:'Marble Décor',price:1999,material:'Marble • Handmade',description:'Decorative handmade marble plate with a refined artisan finish.'},
