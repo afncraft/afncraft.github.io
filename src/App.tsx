@@ -1,4 +1,5 @@
 // AfnCraft refreshed storefront
+// Deployment fix
 import { useMemo, useState } from 'react';
 import { Menu, X, ShoppingBag, ArrowRight, MessageCircle, MapPin, Phone } from 'lucide-react';
 
